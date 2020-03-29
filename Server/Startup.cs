@@ -71,7 +71,8 @@ namespace Server
 
             app.UseRouting();
 
-            app.UseCors(builder => builder.AllowAnyOrigin());
+            app.UseCors(builder => builder.WithOrigins("https://mutual-like.herokuapp.com/").AllowAnyHeader());
+
 
             app.UseAuthorization();
 
