@@ -42,16 +42,7 @@ namespace Server
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors(options =>
-            {
-                options.AddPolicy("CorsPolicy",
-                                  builder => builder.
-                                             WithOrigins("https://mutual-like.herokuapp.com")
-                                             .AllowAnyOrigin()
-                                             .AllowAnyMethod()
-                                             .AllowAnyHeader()
-                                             .AllowCredentials());
-            });
+           
 
             services.AddControllers();
 
@@ -69,7 +60,21 @@ namespace Server
 
             services.AddMediatR(typeof(VkFinder).GetTypeInfo().Assembly);
 
-      
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                                  builder => builder.
+                                             WithOrigins("https://mutual-like.herokuapp.com")
+                                             .AllowAnyOrigin()
+                                             .AllowAnyMethod()
+                                             .AllowAnyHeader()
+                                             .AllowCredentials());
+            });
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -86,6 +91,7 @@ namespace Server
 
             app.UseCors("CorsPolicy");
 
+            app.UseMvc();
 
             app.UseAuthorization();
 
