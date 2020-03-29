@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>13a78b8e-bde0-467a-b16d-36ae7111bd80</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="VkNet.AudioBypassService" Version="1.5.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MutualLikes.Application\MutualLikes.Application.csproj" />
+  </ItemGroup>
+
+
+</Project>
