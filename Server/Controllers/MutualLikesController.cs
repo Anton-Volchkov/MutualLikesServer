@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MutualLikes.Application.Likes.Queries.GetUsersWithMutualLikes;
@@ -11,6 +12,7 @@ namespace MutualLikes.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [EnableCors("CorsPolicy")]
     public class MutualLikesController : ControllerBase
     {
 
