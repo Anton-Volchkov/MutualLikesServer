@@ -71,7 +71,11 @@ namespace Server
 
             app.UseRouting();
 
-            app.UseCors(builder => builder.WithOrigins().AllowAnyHeader());
+            app.UseCors(builder => builder
+                                   .AllowAnyOrigin()
+                                   .AllowAnyMethod()
+                                   .AllowAnyHeader()
+                                   .AllowCredentials());
 
 
             app.UseAuthorization();
