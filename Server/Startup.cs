@@ -57,6 +57,14 @@ namespace Server
             services.AddSingleton<VkFinder>();
 
             services.AddMediatR(typeof(VkFinder).GetTypeInfo().Assembly);
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                                  builder => builder.AllowAnyOrigin()
+                                                    .AllowAnyMethod()
+                                                    .AllowAnyHeader());
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -71,12 +79,7 @@ namespace Server
 
             app.UseRouting();
 
-            app.UseCors(builder => builder
-                                   .AllowAnyOrigin()
-                                   .AllowAnyMethod()
-                                   .AllowAnyHeader()
-                                   .AllowCredentials());
-
+            app.UseCors("CorsPolicy");
 
             app.UseAuthorization();
 
