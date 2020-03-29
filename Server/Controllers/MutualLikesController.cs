@@ -12,7 +12,6 @@ namespace MutualLikes.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [EnableCors("CorsPolicy")]
     public class MutualLikesController : ControllerBase
     {
 

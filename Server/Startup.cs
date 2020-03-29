@@ -61,16 +61,7 @@ namespace Server
             services.AddMediatR(typeof(VkFinder).GetTypeInfo().Assembly);
 
 
-            services.AddCors(options =>
-            {
-                options.AddPolicy("CorsPolicy",
-                                  builder => builder.
-                                             WithOrigins("https://mutual-like.herokuapp.com")
-                                             .AllowAnyOrigin()
-                                             .AllowAnyMethod()
-                                             .AllowAnyHeader()
-                                             .AllowCredentials());
-            });
+            services.AddCors();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
@@ -85,13 +76,15 @@ namespace Server
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors(builder =>
+                            builder.AllowAnyOrigin()
+                                   .AllowAnyHeader()
+                                   .AllowAnyMethod()
+                       );
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
-            app.UseCors("CorsPolicy");
-
-            app.UseMvc();
 
             app.UseAuthorization();
 
