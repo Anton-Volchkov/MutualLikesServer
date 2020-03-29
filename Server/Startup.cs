@@ -58,13 +58,7 @@ namespace Server
 
             services.AddMediatR(typeof(VkFinder).GetTypeInfo().Assembly);
 
-            services.AddCors(options =>
-            {
-                options.AddPolicy("CorsPolicy",
-                                  builder => builder.AllowAnyOrigin()
-                                                    .AllowAnyMethod()
-                                                    .AllowAnyHeader());
-            });
+            services.AddCors();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -79,7 +73,10 @@ namespace Server
 
             app.UseRouting();
 
-            app.UseCors("CorsPolicy");
+            app.UseCors(
+                        options => options.WithOrigins("https://mutual-like.herokuapp.com").AllowAnyMethod()
+                       );
+
 
             app.UseAuthorization();
 
