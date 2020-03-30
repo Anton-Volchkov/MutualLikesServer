@@ -90,7 +90,10 @@ namespace MutualLikes.Application.Likes.Queries.GetUsersWithMutualLikes
             }
             else
             {
-                return new GetUsersWithMutualLikesModel();
+                return new GetUsersWithMutualLikesModel()
+                {
+                    Data = "У данного пользователя закрыт профиль."
+                };
             }
 
             return new GetUsersWithMutualLikesModel()
