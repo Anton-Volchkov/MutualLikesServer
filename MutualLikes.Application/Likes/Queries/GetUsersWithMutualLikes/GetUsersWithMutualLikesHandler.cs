@@ -12,7 +12,7 @@ using VkNet.Enums.Filters;
 
 namespace MutualLikes.Application.Likes.Queries.GetUsersWithMutualLikes
 {
-    public class GetUsersWithMutualLikesHandler : IRequestHandler<GetUsersWithMutualLikesQuery, GetUsersWithMutualLikesModel>
+    public class GetUsersWithMutualLikesHandler : IRequestHandler<GetUsersWithMutualLikesQuery, List<GetUsersWithMutualLikesModel>>
     {
         private readonly VkFinder _finder;
         private readonly IVkApi _api;
@@ -21,11 +21,12 @@ namespace MutualLikes.Application.Likes.Queries.GetUsersWithMutualLikes
             _finder = finder;
             _api = api;
         }
-        public async Task<GetUsersWithMutualLikesModel> Handle(GetUsersWithMutualLikesQuery request, CancellationToken cancellationToken)
+        public async Task<List<GetUsersWithMutualLikesModel>> Handle(GetUsersWithMutualLikesQuery request, CancellationToken cancellationToken)
         {
             long idUser = request.userId;
             byte sex = request.Sex;
-            StringBuilder sb = new StringBuilder(2000);
+          
+            var users = new List<GetUsersWithMutualLikesModel>();
 
             if (await _finder.CheckAccessToUser(idUser))
             {
@@ -33,23 +34,38 @@ namespace MutualLikes.Application.Likes.Queries.GetUsersWithMutualLikes
 
                 if(currentUser is null)
                 {
-                    return new GetUsersWithMutualLikesModel()
+                    users.Add(new GetUsersWithMutualLikesModel()
                     {
-                        Data = "Пользователь не найден!"
-                    };
+                        UserName = $"Неизвестный пользователь",
+                        UserId = idUser,
+                        AdditionalData = $"Пользователь с ID {idUser} не найден."
+                    });
+
+                    return users;
                 }
 
-                sb.AppendLine($"\nПользователь: {currentUser.FirstName} {currentUser.LastName}\n");
-                sb.AppendLine("\tВзаимные лайки найдены со следующими пользователями:\n");
 
 
                 var photoIds = await _finder.GetPhotosIds(currentUser.Id);
 
                 if (photoIds.Count == 0)
                 {
-                    return new GetUsersWithMutualLikesModel()
-                        {Data = "У пользователя нет фото."};
+                    users.Add(new GetUsersWithMutualLikesModel()
+                    {
+                        UserName = $"{currentUser.FirstName} {currentUser.LastName}",
+                        UserId = currentUser.Id,
+                        AdditionalData = "У пользователя нет фото."
+                    });
+
+                    return users;
                 }
+
+                //Если вссе проверки проши, то наш нулевой пользователь в массиве, это тот пользователь для которого делается проверка, у него не должно быть описания
+                users.Add(new GetUsersWithMutualLikesModel()
+                {
+                    UserName = $"{currentUser.FirstName} {currentUser.LastName}",
+                    UserId = currentUser.Id
+                });
 
                 var usersWhoLiked = await _finder.GetAllLikesByPhotoIds(currentUser.Id, photoIds);
 
@@ -81,8 +97,12 @@ namespace MutualLikes.Application.Likes.Queries.GetUsersWithMutualLikes
 
                     if (hasLike)
                     {
-
-                        sb.AppendLine($"\t\t{user.FirstName} {user.LastName} (https://vk.com/id{user.Id})\n");
+                        users.Add(new GetUsersWithMutualLikesModel()
+                        {
+                            UserName = $"{user.FirstName} {user.LastName}",
+                            UserId = user.Id
+                        });
+                   
                     }
                 }
 
@@ -90,14 +110,17 @@ namespace MutualLikes.Application.Likes.Queries.GetUsersWithMutualLikes
             }
             else
             {
-                return new GetUsersWithMutualLikesModel()
+                var currentUser = (await _api.Users.GetAsync(new[] { idUser })).FirstOrDefault();
+
+                users.Add(new GetUsersWithMutualLikesModel()
                 {
-                    Data = "У данного пользователя закрыт профиль."
-                };
+                    UserName = $"{currentUser.FirstName} {currentUser.LastName}",
+                    UserId = currentUser.Id,
+                    AdditionalData = "У данного пользователя закрыт профиль."
+                });
             }
 
-            return new GetUsersWithMutualLikesModel()
-                { Data = sb.ToString() };
+            return users;
         }
     }
 }

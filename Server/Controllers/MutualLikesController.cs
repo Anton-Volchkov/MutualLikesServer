@@ -25,7 +25,7 @@ namespace MutualLikes.Controllers
         }
 
         [HttpGet]
-        public async Task<GetUsersWithMutualLikesModel> Get(long userId, byte sex)
+        public async Task<List<GetUsersWithMutualLikesModel>> Get(long userId, byte sex)
         {
             return await _mediator.Send(new GetUsersWithMutualLikesQuery() { userId = userId, Sex = sex });
         }
