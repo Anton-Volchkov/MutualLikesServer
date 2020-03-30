@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using MutualLikes.Application.VK;
+using Server.Hubs;
 using VkNet;
 using VkNet.Abstractions;
 using VkNet.AudioBypassService.Extensions;
@@ -42,7 +44,7 @@ namespace Server
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-           
+            services.AddSignalR();
 
             services.AddControllers();
 
@@ -61,7 +63,13 @@ namespace Server
             services.AddMediatR(typeof(VkFinder).GetTypeInfo().Assembly);
 
 
-            services.AddCors();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                                  builder => builder.AllowAnyOrigin()
+                                                    .AllowAnyMethod()
+                                                    .AllowAnyHeader());
+            });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
@@ -76,11 +84,7 @@ namespace Server
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseCors(builder =>
-                            builder.AllowAnyOrigin()
-                                   .AllowAnyHeader()
-                                   .AllowAnyMethod()
-                       );
+            app.UseCors("CorsPolicy");
 
             app.UseHttpsRedirection();
 
@@ -90,7 +94,10 @@ namespace Server
 
             app.UseEndpoints(endpoints =>
             {
+              
                 endpoints.MapControllers();
+                endpoints.MapHub<ServerHub>("/server");
+
             });
 
 
