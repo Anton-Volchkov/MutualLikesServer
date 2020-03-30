@@ -15,7 +15,7 @@ namespace Server.Hubs
         {
             _mediator = mediator;
         }
-        public async Task SendToCaller(string userId, string sex)
+        public async Task GetMutualLikes(string userId, string sex)
         {
             var res = await _mediator.Send(new GetUsersWithMutualLikesQuery()
             {
@@ -23,7 +23,7 @@ namespace Server.Hubs
                 Sex = byte.Parse(sex)
             });
 
-           await Clients.Caller.SendAsync("sendToAll", res);
+           await Clients.Caller.SendAsync("SendToCaller", res);
         }
     }
 }
