@@ -28,7 +28,7 @@ namespace MutualLikes.Application.Users.Commands.AddOrUpdateUserData
                 {
                     UserChecked = true,
                     UserId = request.UserId,
-                    DataLastChecked = DateTime.Now.ToString("dd.MM.yyyy hh:mm")
+                    DataLastChecked = DateTime.Now.ToString("dd.MM.yyyy HH:mm")
                 };
 
                 _db.UserDatas.Add(newUser);
@@ -38,7 +38,7 @@ namespace MutualLikes.Application.Users.Commands.AddOrUpdateUserData
                 return newUser.Id;
             }
 
-            user.DataLastChecked = DateTime.Now.ToString("dd.MM.yyyy hh:mm");
+            user.DataLastChecked = DateTime.Now.ToString("dd.MM.yyyy HH:mm");
 
             await _db.SaveChangesAsync(cancellationToken);
 
