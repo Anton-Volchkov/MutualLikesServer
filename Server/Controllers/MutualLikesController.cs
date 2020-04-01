@@ -7,11 +7,13 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MutualLikes.Application.Likes.Queries.GetUsersWithMutualLikes;
+using MutualLikes.Application.Users.Queries.FindUserInDataBase;
+using MutualLikes.Domain.Entities;
 
 namespace MutualLikes.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("[controller]/{action}")]
     public class MutualLikesController : ControllerBase
     {
 
@@ -28,6 +30,13 @@ namespace MutualLikes.Controllers
         public async Task<List<GetUsersWithMutualLikesModel>> Get(long userId, byte sex)
         {
             return await _mediator.Send(new GetUsersWithMutualLikesQuery() { userId = userId, Sex = sex });
+        }
+
+        public async Task<bool> Check(long userId)
+        {
+            var userStatus = await _mediator.Send(new FindUserInDataBaseQuery()
+                                                { UserId = userId });
+            return userStatus;
         }
     }
 }

@@ -10,4 +10,8 @@
     <PackageReference Include="VkNet" Version="1.50.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MutualLikes.DataAccess\MutualLikes.DataAccess.csproj" />
+  </ItemGroup>
+
 </Project>

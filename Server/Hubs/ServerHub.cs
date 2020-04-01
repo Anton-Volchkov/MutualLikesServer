@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.SignalR;
 using MutualLikes.Application.Likes.Queries.GetUsersWithMutualLikes;
+using MutualLikes.Application.Users.Commands.AddOrUpdateUserData;
 
 namespace Server.Hubs
 {
@@ -21,6 +22,11 @@ namespace Server.Hubs
             {
                 userId = long.Parse(userId),
                 Sex = byte.Parse(sex)
+            });
+
+            await _mediator.Send(new AddOrUpdateUserDataQuery()
+            {
+                UserId = long.Parse(userId)
             });
 
            await Clients.Caller.SendAsync("SendToCaller", res);
