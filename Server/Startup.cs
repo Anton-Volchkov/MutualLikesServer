@@ -17,6 +17,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using MutualLikes.Application.VK;
 using MutualLikes.DataAccess;
+using Server.HostedServices;
 using Server.Hubs;
 using VkNet;
 using VkNet.Abstractions;
@@ -55,6 +56,7 @@ namespace Server
 
             services.AddDbContext<ApplicationDbContext>(options =>
                                                             options.UseNpgsql(connectionString));
+            services.AddHostedService<MigrationHostedService>();
 
             services.AddSignalR();
 
