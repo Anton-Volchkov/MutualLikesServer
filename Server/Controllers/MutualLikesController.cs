@@ -32,11 +32,11 @@ namespace MutualLikes.Controllers
             return await _mediator.Send(new GetUsersWithMutualLikesQuery() { userId = userId, Sex = sex });
         }
 
-        public async Task<bool> Check(long userId)
+        public async Task<UserData> Check(long userId)
         {
-            var userStatus = await _mediator.Send(new FindUserInDataBaseQuery()
+            var user = await _mediator.Send(new FindUserInDataBaseQuery()
                                                 { UserId = userId });
-            return userStatus;
+            return user;
         }
     }
 }

@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using MutualLikes.DataAccess;
+using MutualLikes.Domain.Entities;
 
 namespace MutualLikes.Application.Users.Queries.FindUserInDataBase
 {
-    public class FindUserInDataBaseHandler : IRequestHandler<FindUserInDataBaseQuery, bool>
+    public class FindUserInDataBaseHandler : IRequestHandler<FindUserInDataBaseQuery, UserData>
     {
         private readonly ApplicationDbContext _db;
 
@@ -17,16 +18,19 @@ namespace MutualLikes.Application.Users.Queries.FindUserInDataBase
         {
             _db = db;
         }
-        public async Task<bool> Handle(FindUserInDataBaseQuery request, CancellationToken cancellationToken)
+        public async Task<UserData> Handle(FindUserInDataBaseQuery request, CancellationToken cancellationToken)
         {
             var user = await _db.UserDatas.FirstOrDefaultAsync(x => x.UserId == request.UserId);
 
             if(user is null)
             {
-                return false;
+                return new UserData()
+                {
+                    UserChecked = false
+                };
             }
 
-            return user.UserChecked;
+            return user;
         }
     }
 }
