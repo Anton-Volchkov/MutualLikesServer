@@ -80,7 +80,7 @@ namespace Server
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",
-                                  builder => builder.WithOrigins("https://anton-volchkov.github.io/Mutual-Likes")
+                                  builder => builder.WithOrigins("https://anton-volchkov.github.io")
                                                     .AllowAnyMethod()
                                                     .AllowAnyHeader());
             });
